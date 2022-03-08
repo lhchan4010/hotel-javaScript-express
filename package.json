@@ -4,7 +4,7 @@
   "description": "practice javaScript, express",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:server": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,17 @@
   "bugs": {
     "url": "https://github.com/lhchan4010/hotel-javaScript-express/issues"
   },
-  "homepage": "https://github.com/lhchan4010/hotel-javaScript-express#readme"
+  "homepage": "https://github.com/lhchan4010/hotel-javaScript-express#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "dotenv": "^16.0.0",
+    "nodemon": "^2.0.15"
+  }
 }
