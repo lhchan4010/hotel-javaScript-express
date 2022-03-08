@@ -1,4 +1,8 @@
 {
-  "ignore": ["webpack.config.js", "src/client/*", "assets/*"],
-  "exec": "babel-node src/init.js delay 2"
+  "ignore": [
+    "webpack.config.js",
+    "src/client/*",
+    "assets/*"
+  ],
+  "exec": "babel-node src/init.js --delay 2"
 }
