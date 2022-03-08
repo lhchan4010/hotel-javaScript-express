@@ -1,0 +1,19 @@
+{
+  "name": "hotel-javascript-express",
+  "version": "1.0.0",
+  "description": "practice javaScript, express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lhchan4010/hotel-javaScript-express.git"
+  },
+  "author": "chan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lhchan4010/hotel-javaScript-express/issues"
+  },
+  "homepage": "https://github.com/lhchan4010/hotel-javaScript-express#readme"
+}
