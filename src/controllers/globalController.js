@@ -1,5 +1,7 @@
 import User from '../model/user';
 import bcrypt from 'bcrypt';
+import Room from '../model/Room';
+import { async } from 'regenerator-runtime';
 
 export const getHome = (req, res) => {
   return res.render('home', {

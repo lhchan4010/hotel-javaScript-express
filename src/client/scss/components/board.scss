@@ -1,0 +1,28 @@
+.floor {
+  display: flex;
+  text-align: center;
+  .floor__name {
+    font-size: 30px;
+  }
+  .room__container {
+    display: flex;
+    .room {
+      border: solid 2px white;
+      width: 65px;
+      display: flex;
+      flex-direction: column;
+      margin: 5px;
+      span {
+        margin: 3px;
+      }
+      .room__checkInBtn {
+        margin: 2px;
+        padding: 0;
+      }
+    }
+  }
+}
+
+#board-edit__btn {
+  display: none;
+}
