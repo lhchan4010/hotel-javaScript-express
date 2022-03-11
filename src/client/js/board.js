@@ -15,7 +15,8 @@ const createRoomName = (event, data) => {
     roomName.innerText = data.name;
     return roomName;
   }
-  event.target.parentElement.children[0];
+  const roomContainer =
+    event.target.parentElement.children[0];
   roomName.innerText =
     parseInt(roomContainer.dataset.floorNum) * 100 +
     roomContainer.childElementCount +
@@ -73,15 +74,12 @@ const createRoom = (event, data) => {
   if (event) {
     const roomContainer =
       event.target.parentElement.children[0];
-    room.appendChild(roomName, isUsed, isClean, checkInBtn);
+    room.append(roomName, isUsed, isClean, checkInBtn);
     roomContainer.appendChild(room);
-    return room;
+    return;
   }
   room.id = data._id;
-  room.appendChild(roomName);
-  room.appendChild(isUsed);
-  room.appendChild(isClean);
-  room.appendChild(checkInBtn);
+  room.append(roomName, isUsed, isClean, checkInBtn);
   return room;
 };
 
