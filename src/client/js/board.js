@@ -74,6 +74,8 @@ const createFloor = (event, data, floorNum) => {
   if (event) {
     roomContainer.dataset.floorNum =
       board.childElementCount + 1;
+    roomRemoveBtn.style.display = 'inline';
+    roomAddBtn.style.display = 'inline';
   }
   if (data) {
     roomContainer.dataset.floorNum = floorNum;
@@ -162,6 +164,7 @@ const handleEditModeBtn = (e) => {
   editBtn.forEach((btn) => {
     btn.style.display = 'inline';
   });
+  console.log(editBtn);
 };
 const handleAddFloorBtn = (event) => {
   const floor = createFloor(event);

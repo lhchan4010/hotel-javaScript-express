@@ -26,7 +26,6 @@ export const postCreateBoard = async (req, res) => {
     const room = await Room.create(roomData);
     user.rooms.push(room._id);
   }
-  console.log(data);
   await user.save();
   return res.status(200).json({});
 };
