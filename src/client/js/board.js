@@ -20,16 +20,19 @@ export const updateRoomName = (event) => {
   roomNameInput.addEventListener('keyup', async (event) => {
     if (event.key === 'Enter') {
       roomName.innerText = event.target.value;
-      const response = await fetch(`/api/101/room`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: event.target.value,
-          id: room.id,
-        }),
-      });
+      const response = await fetch(
+        `/api/room/${room.id}/name`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: event.target.value,
+            id: room.id,
+          }),
+        }
+      );
       roomName.classList.remove('displayNone');
       event.target.remove();
     }
@@ -54,9 +57,28 @@ const createRoomName = (event, data) => {
   return roomName;
 };
 
+const toggleIsUsed = async (event) => {
+  const room = event.target.parentElement;
+  const isUsed = event.target;
+  const response = await fetch(
+    `/api/room/${room.id}/isUsed`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  const { state } = await response.json();
+  state
+    ? (isUsed.innerText = '사용중')
+    : (isUsed.innerText = '빈방');
+};
+
 const createIsUsed = (event, data) => {
   const isUsed = document.createElement('span');
   isUsed.className = 'room-state__isUsed';
+  isUsed.addEventListener('click', toggleIsUsed);
   if (data) {
     isUsed.innerText = data.state.isUsed
       ? '사용중'
@@ -67,9 +89,28 @@ const createIsUsed = (event, data) => {
   return isUsed;
 };
 
+const toggleIsClean = async (event) => {
+  const room = event.target.parentElement;
+  const isClean = event.target;
+  const response = await fetch(
+    `/api/room/${room.id}/isClean`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  const { state } = await response.json();
+  state
+    ? (isClean.innerText = '청소완료')
+    : (isClean.innerText = '청소필요');
+};
+
 const createIsClean = (event, data) => {
   const isClean = document.createElement('span');
   isClean.className = 'room-state__isClean';
+  isClean.addEventListener('click', toggleIsClean);
   if (data) {
     isClean.innerText = data.state.isClean
       ? '청소완료'

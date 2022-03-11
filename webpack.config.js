@@ -7,6 +7,7 @@ module.exports = {
   entry: {
     main: `${BASE_JS}main.js`,
     board: `${BASE_JS}board.js`,
+    room: `${BASE_JS}room.js`,
   },
   mode: 'development',
   watch: true,
