@@ -1,8 +1,14 @@
 import express from 'express';
-import { postCreateBoard } from '../controllers/boardController';
+import {
+  getBoardData,
+  postCreateBoard,
+} from '../controllers/boardController';
 
 const apiRouter = express.Router();
 
-apiRouter.route('/board').post(postCreateBoard);
+apiRouter
+  .route('/:id([0-9a-f]{24})/board')
+  .get(getBoardData)
+  .post(postCreateBoard);
 
 export default apiRouter;

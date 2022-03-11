@@ -4,6 +4,6 @@ import { postCreateBoard } from '../controllers/globalController';
 
 const boardRouter = express.Router();
 
-boardRouter.route('/').get(getBoard);
+boardRouter.route('/:id([0-9a-f]{24})').get(getBoard);
 
 export default boardRouter;

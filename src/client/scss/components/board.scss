@@ -1,3 +1,6 @@
+h1 {
+  font-size: 30px;
+}
 .floor {
   display: flex;
   text-align: center;
@@ -23,6 +26,6 @@
   }
 }
 
-#board-edit__btn {
+.board-edit__btn {
   display: none;
 }

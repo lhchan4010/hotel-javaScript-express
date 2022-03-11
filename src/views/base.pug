@@ -16,7 +16,7 @@ html(lang="en")
                     li 
                         a(href="/logout") logOut
                     li
-                        a(href="/board") board
+                        a(href=`/board/${loggedInUser._id}`) board
                 else
                     li 
                         a(href="/join") join 
