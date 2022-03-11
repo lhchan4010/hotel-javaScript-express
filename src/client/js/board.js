@@ -2,15 +2,45 @@ import { async } from 'regenerator-runtime';
 
 const board = document.getElementById('board');
 const floorAddBtn = document.getElementById('floor-addBtn');
+const floorRemoveBtn = document.getElementById(
+  'floor-removeBtn'
+);
 const boardSaveBtn =
   document.getElementById('board-saveBtn');
 const editModeBtn = document.getElementById(
   'board-edit__btn'
 );
 
+export const updateRoomName = (event) => {
+  const room = event.target.parentElement;
+  const roomName = event.target;
+  const roomNameInput = document.createElement('input');
+  roomNameInput.type = 'text';
+  roomName.classList.add('displayNone');
+  roomNameInput.addEventListener('keyup', async (event) => {
+    if (event.key === 'Enter') {
+      roomName.innerText = event.target.value;
+      const response = await fetch(`/api/101/room`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: event.target.value,
+          id: room.id,
+        }),
+      });
+      roomName.classList.remove('displayNone');
+      event.target.remove();
+    }
+  });
+  room.prepend(roomNameInput);
+};
+
 const createRoomName = (event, data) => {
   const roomName = document.createElement('span');
   roomName.className = 'room__name';
+  roomName.addEventListener('click', updateRoomName);
   if (data) {
     roomName.innerText = data.name;
     return roomName;
@@ -88,6 +118,7 @@ const handleRemoveRoomBtn = (e) => {
     '.room__container .room'
   );
   if (rooms.length === 0) {
+    e.target.parentElement.remove();
     return;
   }
   rooms[rooms.length - 1].remove();
@@ -198,7 +229,16 @@ const handleAddFloorBtn = (event) => {
   board.appendChild(floor);
 };
 
+const handleRemoveFloorBtn = (event) => {
+  const floors = document.querySelectorAll('.floor');
+  floors[floors.length - 1].remove();
+};
+
 floorAddBtn.addEventListener('click', handleAddFloorBtn);
+floorRemoveBtn.addEventListener(
+  'click',
+  handleRemoveFloorBtn
+);
 boardSaveBtn.addEventListener('click', handleBoardSaveBtn);
 editModeBtn.addEventListener('click', handleEditModeBtn);
 
