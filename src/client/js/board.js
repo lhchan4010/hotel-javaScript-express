@@ -8,6 +8,83 @@ const editModeBtn = document.getElementById(
   'board-edit__btn'
 );
 
+const createRoomName = (event, data) => {
+  const roomName = document.createElement('span');
+  roomName.className = 'room__name';
+  if (data) {
+    roomName.innerText = data.name;
+    return roomName;
+  }
+  event.target.parentElement.children[0];
+  roomName.innerText =
+    parseInt(roomContainer.dataset.floorNum) * 100 +
+    roomContainer.childElementCount +
+    1;
+  return roomName;
+};
+
+const createIsUsed = (event, data) => {
+  const isUsed = document.createElement('span');
+  isUsed.className = 'room-state__isUsed';
+  if (data) {
+    isUsed.innerText = data.state.isUsed
+      ? '사용중'
+      : '빈방';
+    return isUsed;
+  }
+  isUsed.innerText = '빈방';
+  return isUsed;
+};
+
+const createIsClean = (event, data) => {
+  const isClean = document.createElement('span');
+  isClean.className = 'room-state__isClean';
+  if (data) {
+    isClean.innerText = data.state.isClean
+      ? '청소완료'
+      : '청소필요';
+    return isClean;
+  }
+  isClean.innerText = '청소완료';
+  return isClean;
+};
+
+const createCheckInBtn = (event, data) => {
+  const checkInBtn = document.createElement('button');
+  checkInBtn.className = 'room__checkInBtn';
+  if (data) {
+    checkInBtn.innerText = data.state.isUsed
+      ? '퇴실'
+      : '입실';
+    return checkInBtn;
+  }
+  checkInBtn.innerText = '입실';
+  return checkInBtn;
+};
+
+const createRoom = (event, data) => {
+  const room = document.createElement('div');
+  const roomName = createRoomName(event, data);
+  const isUsed = createIsUsed(event, data);
+  const isClean = createIsClean(event, data);
+  const checkInBtn = createCheckInBtn(event, data);
+  room.className = 'room';
+
+  if (event) {
+    const roomContainer =
+      event.target.parentElement.children[0];
+    room.appendChild(roomName, isUsed, isClean, checkInBtn);
+    roomContainer.appendChild(room);
+    return room;
+  }
+  room.id = data._id;
+  room.appendChild(roomName);
+  room.appendChild(isUsed);
+  room.appendChild(isClean);
+  room.appendChild(checkInBtn);
+  return room;
+};
+
 const handleRemoveRoomBtn = (e) => {
   const rooms = e.target.parentElement.querySelectorAll(
     '.room__container .room'
@@ -16,51 +93,6 @@ const handleRemoveRoomBtn = (e) => {
     return;
   }
   rooms[rooms.length - 1].remove();
-};
-
-const createRoom = (event, data) => {
-  const room = document.createElement('div');
-  const roomName = document.createElement('span');
-  const isUsed = document.createElement('span');
-  const isClean = document.createElement('span');
-  const checkInBtn = document.createElement('button');
-
-  room.className = 'room';
-  roomName.className = 'room__name';
-  isUsed.className = 'room-state__isUsed';
-  isClean.className = 'room-state__isClean';
-  checkInBtn.className = 'room__checkInBtn';
-  if (event) {
-    const roomContainer =
-      event.target.parentElement.children[0];
-    roomName.innerText =
-      parseInt(roomContainer.dataset.floorNum) * 100 +
-      roomContainer.childElementCount +
-      1;
-    isUsed.innerText = '빈방';
-    isClean.innerText = '청소완료';
-    checkInBtn.innerText = '입실';
-    room.appendChild(roomName, isUsed, isClean, checkInBtn);
-    roomContainer.appendChild(room);
-  }
-  if (data) {
-    roomName.innerText = data.name;
-    isUsed.innerText = data.state.isUsed
-      ? '사용중'
-      : '빈방';
-    isClean.innerText = data.state.isClean
-      ? '청소완료'
-      : '청소필요';
-    checkInBtn.innerText = data.state.isUsed
-      ? '퇴실'
-      : '입실';
-  }
-
-  room.appendChild(roomName);
-  room.appendChild(isUsed);
-  room.appendChild(isClean);
-  room.appendChild(checkInBtn);
-  return room;
 };
 
 const createFloor = (event, data, floorNum) => {
@@ -151,6 +183,7 @@ const handleBoardSaveBtn = async () => {
     });
   }
   editModeBtn.style.display = 'block';
+  location.reload();
 };
 
 const handleEditModeBtn = (e) => {
