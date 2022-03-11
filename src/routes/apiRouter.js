@@ -1,7 +1,7 @@
 import express from 'express';
 import {
   getBoardData,
-  postCreateBoard,
+  postUpdateBoard,
 } from '../controllers/boardController';
 
 const apiRouter = express.Router();
@@ -9,6 +9,6 @@ const apiRouter = express.Router();
 apiRouter
   .route('/:id([0-9a-f]{24})/board')
   .get(getBoardData)
-  .post(postCreateBoard);
+  .post(postUpdateBoard);
 
 export default apiRouter;

@@ -33,7 +33,6 @@ const createRoom = (event, data) => {
   if (event) {
     const roomContainer =
       event.target.parentElement.children[0];
-    console.log('event');
     roomName.innerText =
       parseInt(roomContainer.dataset.floorNum) * 100 +
       roomContainer.childElementCount +
@@ -116,9 +115,7 @@ const paintBoard = async () => {
 
 const handleBoardSaveBtn = async () => {
   const data = [];
-  const rooms = board.querySelectorAll(
-    '.floor .room__container .room'
-  );
+  const rooms = board.querySelectorAll('.room');
   for (const room of rooms) {
     const roomData = {};
     roomData.name = room.children[0].innerText;
@@ -164,7 +161,6 @@ const handleEditModeBtn = (e) => {
   editBtn.forEach((btn) => {
     btn.style.display = 'inline';
   });
-  console.log(editBtn);
 };
 const handleAddFloorBtn = (event) => {
   const floor = createFloor(event);

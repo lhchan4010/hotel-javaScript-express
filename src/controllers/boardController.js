@@ -14,12 +14,13 @@ export const getBoardData = async (req, res) => {
   res.send(rooms);
 };
 
-export const postCreateBoard = async (req, res) => {
+export const postUpdateBoard = async (req, res) => {
   const { data } = req.body;
   const {
     user: { _id },
   } = req.session;
   const user = await User.findById(_id);
+  await Room.deleteMany({ owner: user._id });
   user.rooms = [];
   for (const roomData of data) {
     roomData.owner = _id;
