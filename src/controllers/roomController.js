@@ -1,5 +1,7 @@
 import { async } from 'regenerator-runtime';
 import Room from '../model/Room';
+import CheckIn from '../model/CheckIn';
+import User from '../model/user';
 
 export const postUpdateRoomName = async (req, res) => {
   const { name, id } = req.body;
@@ -21,4 +23,22 @@ export const postIsClean = async (req, res) => {
   room.state.isClean = !room.state.isClean;
   await room.save();
   res.send({ state: room.state.isClean });
+};
+
+export const postCheckIn = async (req, res) => {
+  const {
+    body: checkInInfo,
+    params: { id },
+  } = req;
+  const room = await Room.findById(id);
+  room.state = { isUsed: true, isClean: false };
+  await room.save();
+  const checkIn = await CheckIn.create({
+    ...checkInInfo,
+    owner: room.owner,
+  });
+  const user = await User.findById(room.owner);
+  user.checkIn.push(checkIn._id);
+  await user.save();
+  res.status(200).send(room);
 };

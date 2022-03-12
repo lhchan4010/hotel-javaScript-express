@@ -4,6 +4,7 @@ import {
   postUpdateBoard,
 } from '../controllers/boardController';
 import {
+  postCheckIn,
   postIsClean,
   postIsUsed,
   postUpdateRoomName,
@@ -27,5 +28,7 @@ apiRouter
 apiRouter
   .route('/room/:id([0-9a-f]{24})/isClean')
   .post(postIsClean);
+
+apiRouter.route('/room/:id/checkIn').post(postCheckIn);
 
 export default apiRouter;

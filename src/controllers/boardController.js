@@ -11,7 +11,6 @@ export const getBoardData = async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id).populate('rooms');
   const rooms = user.rooms;
-  console.log(rooms);
   res.send(rooms);
 };
 

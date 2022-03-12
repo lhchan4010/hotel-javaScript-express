@@ -1,0 +1,17 @@
+div#checkInBox.modal
+    form#checkIn-form.modal-content  
+        span.checkInInfo
+        label(for="type-select") Type 
+        select(name="type" id='type-select').checkInInfo
+            option(value='time') 시간
+            option(value='day') 숙박
+        label(for="payment-select") Payment
+        select(name="payment" id='payment-select').checkInInfo
+            option(value='cash') 현금
+            option(value='card') 카드
+        label(for="price-input") Price
+        input(type="number", name="price",id='price-input',step="1000", placeholder="price", required, maxlenth=100).checkInInfo
+        lable(for="checkInDateTime-input") Time
+        input(type="datetime-local", name="checkInDateTime", id="checkInDateTime-input").checkInInfo
+        input(type="submit", value="save")
+    span#checkInBox-close__btn.close ❌

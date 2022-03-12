@@ -10,8 +10,12 @@ const boardSaveBtn =
 const editModeBtn = document.getElementById(
   'board-edit__btn'
 );
+const checkInForm = document.getElementById('checkIn-form');
+const checkInBoxCloseBtn = document.getElementById(
+  'checkInBox-close__btn'
+);
 
-export const updateRoomName = (event) => {
+const updateRoomName = (event) => {
   const room = event.target.parentElement;
   const roomName = event.target;
   const roomNameInput = document.createElement('input');
@@ -127,9 +131,27 @@ const createIsClean = (event, data) => {
   return isClean;
 };
 
+const handleCheckInBtn = (event) => {
+  const date = new Date();
+  const checkInBox = document.getElementById('checkInBox');
+  const room = event.target.parentElement;
+  if (!room.id) {
+    return;
+  }
+  const checkInInfo =
+    checkInForm.querySelectorAll('.checkInInfo');
+  checkInInfo[0].innerText =
+    room.querySelector('.room__name').innerText;
+  checkInInfo[0].id = room.id;
+  checkInInfo[3].value = 30000;
+  checkInInfo[4].value = date.toISOString().slice(0, 16);
+  checkInBox.style.display = 'flex';
+};
+
 const createCheckInBtn = (event, data) => {
   const checkInBtn = document.createElement('button');
   checkInBtn.className = 'room__checkInBtn';
+  checkInBtn.addEventListener('click', handleCheckInBtn);
   if (data) {
     checkInBtn.innerText = '입실';
     return checkInBtn;
@@ -284,6 +306,40 @@ const handleRemoveFloorBtn = (event) => {
   const floors = document.querySelectorAll('.floor');
   floors[floors.length - 1].remove();
 };
+const handlecheckInForm = async (event) => {
+  event.preventDefault();
+  const checkInInfo =
+    checkInForm.querySelectorAll('.checkInInfo');
+  const roomId = checkInInfo[0].id;
+  const response = await fetch(
+    `/api/room/${roomId}/checkIn`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        room: checkInInfo[0].innerText,
+        type: checkInInfo[1].value,
+        payment: checkInInfo[2].value,
+        price: checkInInfo[3].value,
+        DateTime: checkInInfo[4].value,
+      }),
+    }
+  );
+  if (response.status === 200) {
+    const roomData = await response.json();
+    const room = document.getElementById(roomData._id);
+    room.children[1].innerText = '사용중';
+    room.children[2].innerText = '청소필요';
+    checkInForm.parentElement.style.removeProperty(
+      'display'
+    );
+  }
+};
+const handlecheckInBoxCloseBtn = () => {
+  checkInForm.parentElement.style.removeProperty('display');
+};
 
 floorAddBtn.addEventListener('click', handleAddFloorBtn);
 floorRemoveBtn.addEventListener(
@@ -292,5 +348,9 @@ floorRemoveBtn.addEventListener(
 );
 boardSaveBtn.addEventListener('click', handleBoardSaveBtn);
 editModeBtn.addEventListener('click', handleEditModeBtn);
-
+checkInForm.addEventListener('submit', handlecheckInForm);
+checkInBoxCloseBtn.addEventListener(
+  'click',
+  handlecheckInBoxCloseBtn
+);
 paintBoard();

@@ -19,6 +19,13 @@ const userSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  checkIn: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CheckIn',
+      required: true,
+    },
+  ],
 });
 
 userSchema.pre('save', async function () {
