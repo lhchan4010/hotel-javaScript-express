@@ -11,6 +11,7 @@ export const getBoardData = async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id).populate('rooms');
   const rooms = user.rooms;
+  console.log(rooms);
   res.send(rooms);
 };
 
@@ -25,6 +26,7 @@ export const postUpdateBoard = async (req, res) => {
   for (const roomData of data) {
     roomData.owner = _id;
     const room = await Room.create(roomData);
+    console.log(room);
     user.rooms.push(room._id);
   }
   await user.save();

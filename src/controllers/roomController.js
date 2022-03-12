@@ -18,9 +18,7 @@ export const postIsUsed = async (req, res) => {
 export const postIsClean = async (req, res) => {
   const { id } = req.params;
   const room = await Room.findById(id);
-  console.log(room);
   room.state.isClean = !room.state.isClean;
   await room.save();
-  console.log(room.state);
   res.send({ state: room.state.isClean });
 };

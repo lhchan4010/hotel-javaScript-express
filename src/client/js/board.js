@@ -60,6 +60,9 @@ const createRoomName = (event, data) => {
 const toggleIsUsed = async (event) => {
   const room = event.target.parentElement;
   const isUsed = event.target;
+  if (!room.id) {
+    return;
+  }
   const response = await fetch(
     `/api/room/${room.id}/isUsed`,
     {
@@ -92,6 +95,9 @@ const createIsUsed = (event, data) => {
 const toggleIsClean = async (event) => {
   const room = event.target.parentElement;
   const isClean = event.target;
+  if (!room.id) {
+    return;
+  }
   const response = await fetch(
     `/api/room/${room.id}/isClean`,
     {
@@ -125,9 +131,7 @@ const createCheckInBtn = (event, data) => {
   const checkInBtn = document.createElement('button');
   checkInBtn.className = 'room__checkInBtn';
   if (data) {
-    checkInBtn.innerText = data.state.isUsed
-      ? '퇴실'
-      : '입실';
+    checkInBtn.innerText = '입실';
     return checkInBtn;
   }
   checkInBtn.innerText = '입실';
@@ -217,21 +221,24 @@ const paintBoard = async () => {
 
 const handleBoardSaveBtn = async () => {
   const data = [];
+  const floors = board.querySelectorAll('.floor');
   const rooms = board.querySelectorAll('.room');
   for (const room of rooms) {
     const roomData = {};
     roomData.name = room.children[0].innerText;
     roomData.floor = room.parentElement.dataset.floorNum;
-    roomData.isUsed =
-      room.querySelector('.room-state__isUsed')
-        .innerText === '사용중'
-        ? true
-        : false;
-    roomData.isClean =
-      room.querySelector('.room-state__isClean')
-        .innerText === '청소완료'
-        ? true
-        : false;
+    roomData.state = {
+      isUsed:
+        room.querySelector('.room-state__isUsed')
+          .innerText === '사용중'
+          ? true
+          : false,
+      isClean:
+        room.querySelector('.room-state__isClean')
+          .innerText === '청소완료'
+          ? true
+          : false,
+    };
     data.push(roomData);
   }
   const response = await fetch(
@@ -251,9 +258,12 @@ const handleBoardSaveBtn = async () => {
     editBtn.forEach((btn) => {
       btn.style.display = 'none';
     });
+    for (const floor of floors) {
+      floor.remove();
+    }
+    paintBoard();
+    editModeBtn.style.display = 'block';
   }
-  editModeBtn.style.display = 'block';
-  location.reload();
 };
 
 const handleEditModeBtn = (e) => {
