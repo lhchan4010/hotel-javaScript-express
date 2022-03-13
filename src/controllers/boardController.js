@@ -25,7 +25,6 @@ export const postUpdateBoard = async (req, res) => {
   for (const roomData of data) {
     roomData.owner = _id;
     const room = await Room.create(roomData);
-    console.log(room);
     user.rooms.push(room._id);
   }
   await user.save();

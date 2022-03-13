@@ -18,9 +18,12 @@ h1 {
       span {
         margin: 3px;
       }
-      .room__checkInBtn {
+      .room__btn {
         margin: 2px;
         padding: 0;
+      }
+      .room__checkOutBtn {
+        background-color: tomato;
       }
     }
   }

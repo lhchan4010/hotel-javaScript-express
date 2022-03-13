@@ -31,7 +31,12 @@ export const postCheckIn = async (req, res) => {
     params: { id },
   } = req;
   const room = await Room.findById(id);
-  room.state = { isUsed: true, isClean: false };
+  room.state = {
+    isCheckIn: true,
+    isUsed: true,
+    isClean: false,
+  };
+  console.log(checkInInfo);
   await room.save();
   const checkIn = await CheckIn.create({
     ...checkInInfo,
@@ -41,4 +46,13 @@ export const postCheckIn = async (req, res) => {
   user.checkIn.push(checkIn._id);
   await user.save();
   res.status(200).send(room);
+};
+
+export const postIsCheckIn = async (req, res) => {
+  const { id } = req.params;
+  const room = await Room.findById(id);
+  room.state.isCheckIn = false;
+  room.state.isUsed = false;
+  await room.save();
+  res.sendStatus(200);
 };

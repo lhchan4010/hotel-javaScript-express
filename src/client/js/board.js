@@ -132,7 +132,8 @@ const createIsClean = (event, data) => {
 };
 
 const handleCheckInBtn = (event) => {
-  const date = new Date();
+  const offset = new Date().getTimezoneOffset() * 60000;
+  const today = new Date(Date.now() - offset);
   const checkInBox = document.getElementById('checkInBox');
   const room = event.target.parentElement;
   if (!room.id) {
@@ -144,20 +145,49 @@ const handleCheckInBtn = (event) => {
     room.querySelector('.room__name').innerText;
   checkInInfo[0].id = room.id;
   checkInInfo[3].value = 30000;
-  checkInInfo[4].value = date.toISOString().slice(0, 16);
+  checkInInfo[4].value = today.toISOString().slice(0, 16);
   checkInBox.style.display = 'flex';
 };
 
-const createCheckInBtn = (event, data) => {
+const createCheckInBtn = () => {
   const checkInBtn = document.createElement('button');
-  checkInBtn.className = 'room__checkInBtn';
-  checkInBtn.addEventListener('click', handleCheckInBtn);
-  if (data) {
-    checkInBtn.innerText = '입실';
-    return checkInBtn;
-  }
+  checkInBtn.classList.add('room__checkInBtn', 'room__btn');
   checkInBtn.innerText = '입실';
+  checkInBtn.addEventListener('click', handleCheckInBtn);
   return checkInBtn;
+};
+
+const handleCheckOutBtn = async (event) => {
+  const room = event.target.parentElement;
+  const isUsed = room.children[1];
+  const checkInBtn = room.children[3];
+  const checkOutBtn = room.children[4];
+  const response = await fetch(
+    `/api/room/${room.id}/checkOut`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  if (response.status === 200) {
+    isUsed.innerText = '빈방';
+    checkInBtn.classList.remove('displayNone');
+    checkOutBtn.classList.add('displayNone');
+  }
+};
+
+const createCheckOutBtn = () => {
+  const checkOutBtn = document.createElement('button');
+  checkOutBtn.classList.add(
+    'room__checkOutBtn',
+    'room__btn',
+    'displayNone'
+  );
+  checkOutBtn.innerText = '퇴실';
+  checkOutBtn.addEventListener('click', handleCheckOutBtn);
+  return checkOutBtn;
 };
 
 const createRoom = (event, data) => {
@@ -165,18 +195,31 @@ const createRoom = (event, data) => {
   const roomName = createRoomName(event, data);
   const isUsed = createIsUsed(event, data);
   const isClean = createIsClean(event, data);
-  const checkInBtn = createCheckInBtn(event, data);
+  const checkInBtn = createCheckInBtn();
+  const checkOutBtn = createCheckOutBtn();
   room.className = 'room';
 
   if (event) {
     const roomContainer =
       event.target.parentElement.children[0];
-    room.append(roomName, isUsed, isClean, checkInBtn);
+    room.append(
+      roomName,
+      isUsed,
+      isClean,
+      checkInBtn,
+      checkOutBtn
+    );
     roomContainer.appendChild(room);
     return;
   }
   room.id = data._id;
-  room.append(roomName, isUsed, isClean, checkInBtn);
+  room.append(
+    roomName,
+    isUsed,
+    isClean,
+    checkInBtn,
+    checkOutBtn
+  );
   return room;
 };
 
@@ -323,7 +366,7 @@ const handlecheckInForm = async (event) => {
         type: checkInInfo[1].value,
         payment: checkInInfo[2].value,
         price: checkInInfo[3].value,
-        DateTime: checkInInfo[4].value,
+        time: { checkIn: checkInInfo[4].value },
       }),
     }
   );
@@ -332,6 +375,8 @@ const handlecheckInForm = async (event) => {
     const room = document.getElementById(roomData._id);
     room.children[1].innerText = '사용중';
     room.children[2].innerText = '청소필요';
+    room.children[3].classList.add('displayNone');
+    room.children[4].classList.remove('displayNone');
     checkInForm.parentElement.style.removeProperty(
       'display'
     );
@@ -354,3 +399,11 @@ checkInBoxCloseBtn.addEventListener(
   handlecheckInBoxCloseBtn
 );
 paintBoard();
+
+window.onclick = function (event) {
+  if (event.target === checkInForm.parentElement) {
+    checkInForm.parentElement.style.removeProperty(
+      'display'
+    );
+  }
+};

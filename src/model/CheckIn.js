@@ -19,9 +19,14 @@ const checkInSchema = new mongoose.Schema({
     maxlength: 20,
     trim: true,
   },
-  DateTime: {
-    type: Date,
-    required: true,
+  // createAt: { type: Date, default: Date.now },
+  time: {
+    checkIn: {
+      type: String,
+      required: true,
+      maxlength: 20,
+    },
+    checkOut: { type: String, maxlength: 20 },
   },
   room: {
     type: Number,

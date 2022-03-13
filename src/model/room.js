@@ -12,8 +12,21 @@ const roomSchema = new mongoose.Schema({
     trim: true,
   },
   state: {
-    isUsed: { type: Boolean, default: false },
-    isClean: { type: Boolean, default: true },
+    isCheckIn: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    isUsed: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    isClean: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
