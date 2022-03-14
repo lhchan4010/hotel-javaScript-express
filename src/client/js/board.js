@@ -149,11 +149,17 @@ const handleCheckInBtn = (event) => {
   checkInBox.style.display = 'flex';
 };
 
-const createCheckInBtn = () => {
+const createCheckInBtn = (event, data) => {
   const checkInBtn = document.createElement('button');
   checkInBtn.classList.add('room__checkInBtn', 'room__btn');
-  checkInBtn.innerText = '입실';
   checkInBtn.addEventListener('click', handleCheckInBtn);
+  checkInBtn.innerText = '입실';
+  if (data) {
+    if (data.state.isCheckIn) {
+      checkInBtn.classList.add('displayNone');
+      return checkInBtn;
+    }
+  }
   return checkInBtn;
 };
 
@@ -178,15 +184,24 @@ const handleCheckOutBtn = async (event) => {
   }
 };
 
-const createCheckOutBtn = () => {
+const createCheckOutBtn = (event, data) => {
   const checkOutBtn = document.createElement('button');
-  checkOutBtn.classList.add(
-    'room__checkOutBtn',
-    'room__btn',
-    'displayNone'
-  );
   checkOutBtn.innerText = '퇴실';
   checkOutBtn.addEventListener('click', handleCheckOutBtn);
+  checkOutBtn.classList.add(
+    'room__checkOutBtn',
+    'room__btn'
+  );
+  if (event) {
+    checkOutBtn.classList.add('displayNone');
+  }
+  if (data) {
+    console.log(data.state.isCheckIn);
+    if (!data.state.isCheckIn) {
+      checkOutBtn.classList.add('displayNone');
+      return checkOutBtn;
+    }
+  }
   return checkOutBtn;
 };
 
@@ -195,8 +210,8 @@ const createRoom = (event, data) => {
   const roomName = createRoomName(event, data);
   const isUsed = createIsUsed(event, data);
   const isClean = createIsClean(event, data);
-  const checkInBtn = createCheckInBtn();
-  const checkOutBtn = createCheckOutBtn();
+  const checkInBtn = createCheckInBtn(event, data);
+  const checkOutBtn = createCheckOutBtn(event, data);
   room.className = 'room';
 
   if (event) {
@@ -213,6 +228,7 @@ const createRoom = (event, data) => {
     return;
   }
   room.id = data._id;
+  room.dataset.ischeckin = data.state.isCheckIn;
   room.append(
     roomName,
     isUsed,
@@ -293,6 +309,7 @@ const handleBoardSaveBtn = async () => {
     roomData.name = room.children[0].innerText;
     roomData.floor = room.parentElement.dataset.floorNum;
     roomData.state = {
+      isCheckIn: room.dataset.ischeckin,
       isUsed:
         room.querySelector('.room-state__isUsed')
           .innerText === '사용중'

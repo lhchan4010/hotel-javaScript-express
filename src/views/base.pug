@@ -17,6 +17,8 @@ html(lang="en")
                         a(href="/logout") logOut
                     li
                         a(href=`/board/${loggedInUser._id}`) board
+                    li 
+                        a(href=`/user/accounting`) 매출
                 else
                     li 
                         a(href="/join") join 
@@ -24,4 +26,4 @@ html(lang="en")
                         a(href="/login") logIn 
         main 
             block content
-        
+    block scripts        

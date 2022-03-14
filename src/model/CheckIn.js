@@ -19,7 +19,7 @@ const checkInSchema = new mongoose.Schema({
     maxlength: 20,
     trim: true,
   },
-  // createAt: { type: Date, default: Date.now },
+  createAt: { type: Date, default: Date.now },
   time: {
     checkIn: {
       type: String,
@@ -41,6 +41,6 @@ const checkInSchema = new mongoose.Schema({
   },
 });
 
-const CheckIn = mongoose.model('checkIn', checkInSchema);
+const CheckIn = mongoose.model('CheckIn', checkInSchema);
 
 export default CheckIn;

@@ -5,7 +5,7 @@ import {
 } from '../controllers/boardController';
 import {
   postCheckIn,
-  postIsCheckIn,
+  postCheckOut,
   postIsClean,
   postIsUsed,
   postUpdateRoomName,
@@ -34,6 +34,6 @@ apiRouter.route('/room/:id/checkIn').post(postCheckIn);
 
 apiRouter
   .route('/room/:id([0-9a-f]{24})/checkOut')
-  .post(postIsCheckIn);
+  .post(postCheckOut);
 
 export default apiRouter;

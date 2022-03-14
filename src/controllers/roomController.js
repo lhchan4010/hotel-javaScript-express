@@ -48,7 +48,7 @@ export const postCheckIn = async (req, res) => {
   res.status(200).send(room);
 };
 
-export const postIsCheckIn = async (req, res) => {
+export const postCheckOut = async (req, res) => {
   const { id } = req.params;
   const room = await Room.findById(id);
   room.state.isCheckIn = false;

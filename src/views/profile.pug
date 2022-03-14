@@ -1,0 +1,11 @@
+extends base
+include mixins/checkInData
+
+block content 
+    h1 #{pageTitle}
+    div 
+        canvas(id="myChart" width="400" height="400")
+        each checkInData in checkInDatas
+            +checkInData(checkInData)
+block scripts
+    script(src="/assets/js/chart.js")

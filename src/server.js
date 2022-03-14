@@ -7,6 +7,7 @@ import { localsMiddleware } from './middleware';
 import apiRouter from './routes/apiRouter';
 import boardRouter from './routes/boardRouter';
 import globalRouter from './routes/globalRouter';
+import userRouter from './routes/userRouter';
 
 const app = express();
 
@@ -32,5 +33,6 @@ app.use('/assets', express.static('assets'));
 app.use('/', globalRouter);
 app.use('/api', apiRouter);
 app.use('/board', boardRouter);
+app.use('/user', userRouter);
 
 export default app;
