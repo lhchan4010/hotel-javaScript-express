@@ -3,16 +3,15 @@ include mixins/checkInData
 
 block content 
     h1 #{pageTitle}
-    div 
-        form(action="/user/accounting/revenue", method="post") 
+    div#revenue 
+        form 
             select(name="range") 
-                option(value="week") 이번주
+                option(value="week") 일주일
                 option(value="month") 한달
                 option(value="year") 올해
             input(type="submit", value="조회")
-
-        canvas(id="myChart" width="400" height="400")
-        each checkInData in checkInDatas
-            +checkInData(checkInData)
+        
+    each checkInData in checkInDatas
+        +checkInData(checkInData)
 block scripts
     script(src="/assets/js/chart.js")

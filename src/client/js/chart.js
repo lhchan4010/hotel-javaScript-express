@@ -4,75 +4,84 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { async } from 'regenerator-runtime';
 Chart.register(ChartDataLabels);
 
-const chartContainer = document.getElementById('chart');
+const range = document.querySelector('form');
+const chartContainer = document.getElementById('revenue');
 
-const revenueCalculator = (data, type) => {
-  return data.reduce((a, b) => {
-    if (b.payment === type) {
-      return a + b.price;
-    }
-    return a;
-  }, 0);
-};
-
-const revenueApi = async () => {
-  const res = await fetch(`/user/accounting/revenue`);
-  const data = await res.json();
-  return data;
-};
-const paintChart = async () => {
-  const data = await revenueApi();
-  const dates = new Set(
+const revenueCalculator = (data, labels) => {
+  const totalRevenue = [];
+  const cashRevenue = [];
+  const cardRevenue = [];
+  const yanoljaRevenue = [];
+  for (const label of labels) {
+    let cash = 0;
+    let card = 0;
+    let yanolja = 0;
     data.map((item) => {
-      return item.time.checkIn;
+      if (item.createAt === label) {
+        switch (item.payment) {
+          case 'cash':
+            cash = cash + item.price;
+            break;
+          case 'card':
+            card = card + item.price;
+            break;
+          case 'yanolja':
+            yanolja = yanolja + item.price;
+            break;
+          default:
+            break;
+        }
+      }
+    });
+    totalRevenue.push(cash + card + yanolja);
+    cashRevenue.push(cash);
+    cardRevenue.push(card);
+    yanoljaRevenue.push(yanolja);
+  }
+  return {
+    totalRevenue,
+    cashRevenue,
+    cardRevenue,
+    yanoljaRevenue,
+  };
+};
+
+const getRevenue = async (event) => {
+  event.preventDefault();
+  const range = event.target[0].value;
+  const res = await fetch(
+    `/user/accounting/revenue/${range}`
+  );
+  const data = await res.json();
+  const labels = new Set(
+    data.map((item) => {
+      item.createAt = item.createAt.slice(5, 10);
+      return item.createAt;
     })
   );
-  console.log(dates);
-  data.map((item) => {
-    item.createAt;
-  });
 
-  const type = {
-    card: 'card',
-    cash: 'cash',
-    yanolja: 'yanolja',
-  };
-  const cardRevenue = revenueCalculator(data, type.card);
-  const cashRevenue = revenueCalculator(data, type.cash);
-  const yanoljaRevenue = revenueCalculator(
-    data,
-    type.yanolja
-  );
-  const totalRevenue =
-    cardRevenue + cashRevenue + yanoljaRevenue;
-  chart(
-    [...dates],
-    [totalRevenue],
-    [cashRevenue],
-    [cardRevenue],
-    [yanoljaRevenue]
-  );
+  const revenue = revenueCalculator(data, labels);
+  const revenueChart = chart([...labels], revenue);
+  const previousCanvas = document.querySelector('canvas');
+  if (previousCanvas) {
+    previousCanvas.remove();
+  }
+  chartContainer.appendChild(revenueChart);
 };
-paintChart();
 
 const chart = (
   labels,
-  totalRevenue,
-  cashRevenue,
-  cardRevenue,
-  yanoljaRevenue
+  { totalRevenue, cashRevenue, cardRevenue, yanoljaRevenue }
 ) => {
-  const ctx = document
-    .getElementById('myChart')
-    .getContext('2d');
-  const type = 'bar';
-  const myChart = new Chart(ctx, {
-    type,
+  const canvas = document.createElement('canvas');
+  canvas.id = 'revenueChart';
+  canvas.setAttribute('width', '400');
+  canvas.setAttribute('height', '400');
+  const ctx = canvas.getContext('2d');
+  const revenueChart = new Chart(ctx, {
+    type: 'bar',
     data: {
-      labels: labels.map((item) => {
-        console.log(item);
-        return item.slice(5, 10).replace('-', '/');
-      }),
+      labels,
       datasets: [
         {
           type: 'line',
@@ -121,10 +130,6 @@ const chart = (
       },
     },
   });
+  return canvas;
 };
-
-const month = async () => {
-  const res = await fetch(`/user/accounting/revenue/month`);
-  const data = await res.json();
-  return data;
-};
+range.addEventListener('submit', getRevenue);

@@ -8,8 +8,8 @@ import {
 const userRouter = express.Router();
 
 userRouter.route('/accounting').get(getAccounting);
-userRouter.route('/accounting/revenue').get(getRevenue);
-
-userRouter.route('/accounting/revenue/month').get(getMonth);
+userRouter
+  .route('/accounting/revenue/:range')
+  .get(getRevenue);
 
 export default userRouter;
