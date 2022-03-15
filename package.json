@@ -20,6 +20,7 @@
   "dependencies": {
     "@toast-ui/chart": "^4.4.1",
     "chart.js": "^3.7.1",
+    "chartjs-plugin-datalabels": "^2.0.0",
     "connect-mongo": "^4.6.0",
     "express": "^4.17.3",
     "express-session": "^1.17.2",

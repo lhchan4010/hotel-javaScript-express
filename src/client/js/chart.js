@@ -1,6 +1,8 @@
 import 'regenerator-runtime';
 import Chart from 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { async } from 'regenerator-runtime';
+Chart.register(ChartDataLabels);
 
 const chartContainer = document.getElementById('chart');
 
@@ -22,11 +24,14 @@ const paintChart = async () => {
   const data = await revenueApi();
   const dates = new Set(
     data.map((item) => {
-      return item.time.checkIn
-        .slice(5, 10)
-        .replace('-', '/');
+      return item.time.checkIn;
     })
   );
+  console.log(dates);
+  data.map((item) => {
+    item.createAt;
+  });
+
   const type = {
     card: 'card',
     cash: 'cash',
@@ -38,8 +43,11 @@ const paintChart = async () => {
     data,
     type.yanolja
   );
+  const totalRevenue =
+    cardRevenue + cashRevenue + yanoljaRevenue;
   chart(
     [...dates],
+    [totalRevenue],
     [cashRevenue],
     [cardRevenue],
     [yanoljaRevenue]
@@ -49,6 +57,7 @@ paintChart();
 
 const chart = (
   labels,
+  totalRevenue,
   cashRevenue,
   cardRevenue,
   yanoljaRevenue
@@ -60,8 +69,23 @@ const chart = (
   const myChart = new Chart(ctx, {
     type,
     data: {
-      labels,
+      labels: labels.map((item) => {
+        console.log(item);
+        return item.slice(5, 10).replace('-', '/');
+      }),
       datasets: [
+        {
+          type: 'line',
+          label: 'total',
+          datalabels: {
+            font: { size: 16 },
+            color: 'white',
+          },
+          data: totalRevenue,
+          backgroundColor: 'rgba(0, 0, 0, 1)',
+          borderColor: 'rgba(0, 0, 0, 0)',
+          borderWidth: 1,
+        },
         {
           label: 'cash',
           data: cashRevenue,
